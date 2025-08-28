@@ -12,7 +12,7 @@ from google.adk.tools.agent_tool import AgentTool
 recordatorio_instruction = io.open("zenit/src/recordatorio.txt").read()
 iot_instruction = io.open("zenit/src/iot.txt").read()
 operadora_instruction = io.open("zenit/src/operadora.txt").read()
-companion_instruction = io.open("szenit/rc/companion.txt").read()
+companion_instruction = io.open("zenit/src/companion.txt").read()
 archivero_instruction = io.open("zenit/src/archivero.txt").read()
 root_instruction = io.open("zenit/src/root.txt").read()
 
