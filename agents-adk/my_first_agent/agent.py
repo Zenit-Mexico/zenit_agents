@@ -43,6 +43,7 @@ zenit_recordatorio = Agent(
     name="recordatorio",
     model="gemini-2.5-flash",
     instruction=recordatorio_instruction,
+    tools = [google_search]
 )
 
 # Agente companion
