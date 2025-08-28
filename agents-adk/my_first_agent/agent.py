@@ -5,6 +5,9 @@ import os
 from google.adk.tools import ToolContext
 from google.adk.tools.agent_tool import AgentTool
 from src.functions import vitales_simulados
+from google.adk.tools import google_search
+from google.adk.tools.agent_tool import AgentTool
+
 
 recordatorio_instruction = io.open("src/recordatorio.txt").read()
 iot_instruction = io.open("src/iot.txt").read()
@@ -37,7 +40,7 @@ zenit_operadora = Agent(
 
 # Agente recordatorio
 zenit_recordatorio = Agent(
-    name="policia",
+    name="recordatorio",
     model="gemini-2.5-flash",
     instruction=recordatorio_instruction,
 )
@@ -47,6 +50,7 @@ zenit_companion = Agent(
     name="companion",
     model="gemini-2.5-flash",
     instruction=companion_instruction,
+    tools = [google_search]
 )
 
 # Root

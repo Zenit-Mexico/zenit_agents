@@ -1,8 +1,8 @@
 def vitales_simulados():
     import random
-    glucosa = random.randint(60, 200)  # mg/dL
+    glucosa = random.randint(60, 180)  # mg/dL
     ritmo_cardiaco = random.randint(60, 100)  # bpm
-    o2 = random.randint(60, 100)  # %
+    o2 = random.randint(80, 100)  # %
     presion_arterial = f"{random.randint(100, 150)}/{random.randint(60, 90)}"  # mmHg
     return {
         'glucosa': glucosa,
