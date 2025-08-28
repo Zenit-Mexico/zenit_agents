@@ -1,34 +1,70 @@
 from google.adk.agents import Agent
 import asyncio
+import io
+import os
 from google.adk.tools import ToolContext
 from google.adk.tools.agent_tool import AgentTool
 
+def vitales_simulados():
+    import random
+    glucosa = random.randint(60, 200)  # mg/dL
+    ritmo_cardiaco = random.randint(60, 100)  # bpm
+    o2 = random.randint(60, 100)  # %
+    presion_arterial = f"{random.randint(100, 150)}/{random.randint(60, 90)}"  # mmHg
+    return {
+        'glucosa': glucosa,
+        'ritmo_cardiaco': ritmo_cardiaco,
+        'o2': o2,
+        'presion_arterial': presion_arterial
+    }
+print(os.listdir())
+
+policia_instruction = io.open("src/policia.txt").read()
+iot_instruction = io.open("src/iot.txt").read()
+operadora_instruction = io.open("src/operadora.txt").read()
+platicadora_instruction = io.open("src/platicadora.txt").read()
+archivero_instruction = io.open("src/archivero.txt").read()
 
 # Agente archivero, que tiene la información de las medicinas
-archivero = Agent(
+zenit_archivero = Agent(
     name="archivero",
     model="gemini-2.5-flash",
-    instruction="El paciente debe tomar antihipertensivos a las 8 am y medicina para la artritis a las 8 pm",
+    instruction=archivero_instruction,
 )
 
 # Agente archivero, que tiene la información de las medicinas
-iot = Agent(
+zenit_iot = Agent(
     name="iot",
     model="gemini-2.5-flash",
-    instruction="Recibes informaciónn de los wearables del paciente, como su ritmo cardiaco, presión arterial y nivel de oxígeno en la sangre. Si detectas alguna anomalía, debes alertar al agente policia inmediatamente, por ahora vas a simular los datos cuando te lo pidan si es mayora 120/80 de presión arterial, 100 de ritmo cardiaco o menos de 95 de oxígeno en la sangre, debes alertar al agente policia. Además debes brindar valores específicos",
+    instruction=iot_instruction,
+    tools=[vitales_simulados],
 )
 
 # Agente archivero, que tiene la información de las medicinas
-operadora = Agent(
+zenit_operadora = Agent(
     name="operadora",
     model="gemini-2.5-flash",
-    instruction="Si el paciente presenta una emergenccia médica debes contactar a los familiares del paciente, Carlos y Ana, además de al Dr. Sánchez, su médico de cabecera. Debes reportar a policía si se logró contactar a los familiares y al médico.",
-)
+    instruction=operadora_instruction,)
 
-# Agente policia, que es el agente principal
-root_agent = Agent(
+# Agente policia
+zenit_policia = Agent(
     name="policia",
     model="gemini-2.5-flash",
-    instruction="Estas en contacto con un adulto mayor de forma constante, le recuerdas tomar sus medicinas y verificas que se encuentré bien, debes ser proactivo y dar respuestas cortas, amigables y comprensibles. Para verificar qué debe tomar el paciente, contacata con archivero. También debes consultar con iot el estado de salud actual del paciente para identificar riesgos. Siempre pregunta e interactúa con el paciente para asegurarte de que se encuentra bien. Si detectas alguna anomalía en los datos de salud del paciente, contacta inmediatamente a operadora para que contacte a los familiares y al médico del paciente. Ante una situación de riesgo se requieren las mediciones específicas de iot",
-    tools=[AgentTool(agent=archivero), AgentTool(agent=iot), AgentTool(agent=operadora)]
+    instruction=policia_instruction,
+)
+
+# Agente platicadora
+zenit_platicadora = Agent(
+    name="platicadora",
+    model="gemini-2.5-flash",
+    instruction=platicadora_instruction,
+    tools=[AgentTool(agent=zenit_policia), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
+)
+
+# Root
+root_agent = Agent(
+    name="root_agent",
+    model="gemini-2.5-flash",
+    instruction="Coordinas a los demás agentes.",
+    tools=[AgentTool(agent=zenit_platicadora)],
 )
