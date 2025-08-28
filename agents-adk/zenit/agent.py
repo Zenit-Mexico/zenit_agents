@@ -4,17 +4,17 @@ import io
 import os
 from google.adk.tools import ToolContext
 from google.adk.tools.agent_tool import AgentTool
-from src.functions import vitales_simulados
+from zenit.src.functions import vitales_simulados
 from google.adk.tools import google_search
 from google.adk.tools.agent_tool import AgentTool
 
 
-recordatorio_instruction = io.open("src/recordatorio.txt").read()
-iot_instruction = io.open("src/iot.txt").read()
-operadora_instruction = io.open("src/operadora.txt").read()
-companion_instruction = io.open("src/companion.txt").read()
-archivero_instruction = io.open("src/archivero.txt").read()
-root_instruction = io.open("src/root.txt").read()
+recordatorio_instruction = io.open("zenit/src/recordatorio.txt").read()
+iot_instruction = io.open("zenit/src/iot.txt").read()
+operadora_instruction = io.open("zenit/src/operadora.txt").read()
+companion_instruction = io.open("szenit/rc/companion.txt").read()
+archivero_instruction = io.open("zenit/src/archivero.txt").read()
+root_instruction = io.open("zenit/src/root.txt").read()
 
 
 # Agente archivero, que tiene la información de las medicinas
