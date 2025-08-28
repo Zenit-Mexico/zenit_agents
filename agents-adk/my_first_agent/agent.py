@@ -4,26 +4,15 @@ import io
 import os
 from google.adk.tools import ToolContext
 from google.adk.tools.agent_tool import AgentTool
+from src.functions import vitales_simulados
 
-def vitales_simulados():
-    import random
-    glucosa = random.randint(60, 200)  # mg/dL
-    ritmo_cardiaco = random.randint(60, 100)  # bpm
-    o2 = random.randint(60, 100)  # %
-    presion_arterial = f"{random.randint(100, 150)}/{random.randint(60, 90)}"  # mmHg
-    return {
-        'glucosa': glucosa,
-        'ritmo_cardiaco': ritmo_cardiaco,
-        'o2': o2,
-        'presion_arterial': presion_arterial
-    }
-print(os.listdir())
-
-policia_instruction = io.open("src/policia.txt").read()
+recordatorio_instruction = io.open("src/recordatorio.txt").read()
 iot_instruction = io.open("src/iot.txt").read()
 operadora_instruction = io.open("src/operadora.txt").read()
-platicadora_instruction = io.open("src/platicadora.txt").read()
+companion_instruction = io.open("src/companion.txt").read()
 archivero_instruction = io.open("src/archivero.txt").read()
+root_instruction = io.open("src/root.txt").read()
+
 
 # Agente archivero, que tiene la información de las medicinas
 zenit_archivero = Agent(
@@ -46,25 +35,24 @@ zenit_operadora = Agent(
     model="gemini-2.5-flash",
     instruction=operadora_instruction,)
 
-# Agente policia
-zenit_policia = Agent(
+# Agente recordatorio
+zenit_recordatorio = Agent(
     name="policia",
     model="gemini-2.5-flash",
-    instruction=policia_instruction,
+    instruction=recordatorio_instruction,
 )
 
-# Agente platicadora
-zenit_platicadora = Agent(
-    name="platicadora",
+# Agente companion
+zenit_companion = Agent(
+    name="companion",
     model="gemini-2.5-flash",
-    instruction=platicadora_instruction,
-    #tools=[AgentTool(agent=zenit_policia), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
+    instruction=companion_instruction,
 )
 
 # Root
 root_agent = Agent(
-    name="root_agent",
+    name="zenit",
     model="gemini-2.5-flash",
-    instruction="Coordinas a los demás agentes. Tu función es apoyar al adulto mayor en su autocuidado, si preguntan sobre medicinas contacta zenit_policia y azenit archivero. Si hay que revisar mediciones de salud a zenit_iot, si hay que llamar a zenit_operadora",
-    tools=[AgentTool(agent=zenit_platicadora), AgentTool(agent=zenit_policia), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
+    instruction=root_instruction,
+    tools=[AgentTool(agent=zenit_companion), AgentTool(agent=zenit_recordatorio), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
 )
