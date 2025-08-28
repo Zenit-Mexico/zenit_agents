@@ -58,13 +58,13 @@ zenit_platicadora = Agent(
     name="platicadora",
     model="gemini-2.5-flash",
     instruction=platicadora_instruction,
-    tools=[AgentTool(agent=zenit_policia), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
+    #tools=[AgentTool(agent=zenit_policia), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
 )
 
 # Root
 root_agent = Agent(
     name="root_agent",
     model="gemini-2.5-flash",
-    instruction="Coordinas a los demás agentes.",
-    tools=[AgentTool(agent=zenit_platicadora)],
+    instruction="Coordinas a los demás agentes. Tu función es apoyar al adulto mayor en su autocuidado, si preguntan sobre medicinas contacta zenit_policia y azenit archivero. Si hay que revisar mediciones de salud a zenit_iot, si hay que llamar a zenit_operadora",
+    tools=[AgentTool(agent=zenit_platicadora), AgentTool(agent=zenit_policia), AgentTool(agent=zenit_operadora), AgentTool(agent=zenit_iot), AgentTool(agent=zenit_archivero)],
 )
